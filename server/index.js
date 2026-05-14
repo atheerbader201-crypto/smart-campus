@@ -13,6 +13,11 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: "12mb" }));
 
+const PORT = Number(process.env.PORT) || 5000;
+const conStr =
+  process.env.MONGODB_URI ||
+  "mongodb+srv://admin:1234@cluster0.5fffxlg.mongodb.net/SmartCampus?appName=Cluster0";
+
 function sanitizeItemImage(raw) {
   if (raw == null || raw === "") return null;
   const s = String(raw).trim();
@@ -21,12 +26,6 @@ function sanitizeItemImage(raw) {
   return s;
 }
 
-app.listen(5000, () => {
-  console.log("Server Connected...");
-});
-
-const conStr =
-  "mongodb+srv://admin:1234@cluster0.5fffxlg.mongodb.net/SmartCampus?appName=Cluster0";
 mongoose
   .connect(conStr)
   .then(() => {
@@ -580,3 +579,6 @@ app.delete("/admin/items/:id", async (req, res) => {
   }
 });
 
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
