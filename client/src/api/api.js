@@ -14,6 +14,26 @@ function resolveBaseUrl() {
 
 const API = axios.create({
   baseURL: resolveBaseUrl(),
+  timeout: 90_000,
 });
+
+API.interceptors.response.use(
+  (res) => res,
+  async (error) => {
+    const config = error.config;
+    if (!config || (config.__retryCount ?? 0) >= 2) return Promise.reject(error);
+    const method = String(config.method || "get").toLowerCase();
+    if (method !== "get") return Promise.reject(error);
+    const retriable =
+      !error.response ||
+      error.response.status >= 500 ||
+      error.code === "ECONNABORTED" ||
+      error.message === "Network Error";
+    if (!retriable) return Promise.reject(error);
+    config.__retryCount = (config.__retryCount ?? 0) + 1;
+    await new Promise((r) => setTimeout(r, 3000));
+    return API(config);
+  }
+);
 
 export default API;
