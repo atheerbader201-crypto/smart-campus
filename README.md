@@ -9,7 +9,6 @@ Lost & found listings for campus — React (Vite) frontend + Express/MongoDB API
 | `client/` | React frontend |
 | `server/` | Express API |
 | `docker-compose.yml` | Run API + frontend together |
-| `render.yaml` | Deploy API to [Render](https://render.com) |
 
 ---
 
@@ -81,80 +80,6 @@ Stop: `docker compose down`
 
 ---
 
-## Deployment
-
-### Backend — Render (Docker)
-
-1. Push this repo to GitHub.
-2. [Render Dashboard](https://dashboard.render.com) → **New** → **Blueprint** (or Web Service).
-3. Connect the repo. Set **Root Directory** to `server` if not using Blueprint.
-4. Environment variables:
-   - `MONGODB_URI` — your MongoDB Atlas connection string
-   - `NODE_ENV` = `production`
-5. Deploy. Copy the service URL, e.g. `https://smart-campus-api.onrender.com`
-
-Or use the included `render.yaml` Blueprint from the repo root.
-
-### Frontend — Netlify / Vercel / Render Static
-
-1. Build command: `npm run build`
-2. Publish directory: `dist`
-3. Root directory: `client`
-4. Environment variable:
-
-   ```env
-   VITE_API_URL=https://YOUR-BACKEND-RENDER-URL.onrender.com
-   ```
-
-   No trailing slash. Rebuild after changing this value.
-
-Update `client/.env.production` with the same URL for local production builds:
-
-```bash
-cd client
-npm run build
-```
-
-### Live URLs (Render)
-
-| Role | URL | Mark |
-|------|-----|------|
-| **Server (API)** | https://smart-campus-cuco.onrender.com | Server — 1 mark |
-| **Client (React UI)** | Deploy separately (see below) | Client — 1 mark |
-
-`https://smart-campus-cuco.onrender.com` is the **Express API only** (not the login page).  
-Opening it in the browser shows API status JSON; listings: `/items?type=lost`.
-
-#### Deploy the frontend on Render (required for Client mark)
-
-1. [Render Dashboard](https://dashboard.render.com) → **New** → **Static Site**.
-2. Connect the same GitHub repo.
-3. Settings:
-   - **Root Directory:** `client`
-   - **Build Command:** `npm ci && npm run build`
-   - **Publish Directory:** `dist`
-4. **Environment** → add:
-
-   ```env
-   VITE_API_URL=https://smart-campus-cuco.onrender.com
-   ```
-
-   No trailing slash. **Save** then **Manual Deploy** (rebuild required after any change).
-
-5. Copy the new static site URL (e.g. `https://smart-campus-client.onrender.com`) — use this for the **presentation** (login, listings, admin).
-
-**Important:** `VITE_API_URL` must be the **API** host (`smart-campus-cuco`), not the frontend URL.
-
-Or deploy both services from repo root via **Blueprint** using `render.yaml` (API + static frontend).
-
-### Verify deployment
-
-1. **Server:** https://smart-campus-cuco.onrender.com/items?type=lost — JSON array.
-2. **Client:** open your static site URL — home page and login work; Network tab calls `smart-campus-cuco.onrender.com`.
-3. Register / login on the **frontend** URL, not the API URL.
-
----
-
 ## Tests (frontend)
 
 ```bash
@@ -168,6 +93,6 @@ npm run test:run
 
 | Variable | Where | Purpose |
 |----------|--------|---------|
-| `MONGODB_URI` | server / Docker / Render | MongoDB Atlas connection |
-| `PORT` | server / Render | API port (default `5000`) |
+| `MONGODB_URI` | server / Docker | MongoDB Atlas connection |
+| `PORT` | server | API port (default `5000`) |
 | `VITE_API_URL` | client build | Backend base URL for Axios |

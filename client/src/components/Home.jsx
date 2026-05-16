@@ -76,9 +76,7 @@ const Home = () => {
         setFound(Array.isArray(foundRes.data) ? foundRes.data : []);
       } catch (e) {
         if (signal.aborted || e?.code === "ERR_CANCELED") return;
-        setFetchError(
-          "Could not load live listings. Open the API link once to wake the server, wait 30 seconds, then refresh (Ctrl+F5)."
-        );
+        setFetchError("Could not load live listings. Check that the server is running.");
         setLost([]);
         setFound([]);
       } finally {
