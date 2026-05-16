@@ -11,6 +11,7 @@ server/dist/
 .env
 .env.*
 !.env.example
+!client/.env.production
 
 # Logs & OS
 *.log
