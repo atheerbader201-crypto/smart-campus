@@ -579,6 +579,14 @@ app.delete("/admin/items/:id", async (req, res) => {
   }
 });
 
+app.get("/", (_req, res) => {
+  res.json({
+    service: "Smart Campus API",
+    status: "ok",
+    docs: "Use /items?type=lost or /items?type=found for listings",
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });

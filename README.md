@@ -115,29 +115,43 @@ cd client
 npm run build
 ```
 
-### Live URLs
+### Live URLs (Render)
 
-| App | URL |
-|-----|-----|
-| Frontend (Render) | https://smart-campus-1-dm81.onrender.com |
-| API (Render) | Set after deploying `server/` — e.g. `https://smart-campus-api.onrender.com` |
+| Role | URL | Mark |
+|------|-----|------|
+| **Server (API)** | https://smart-campus-cuco.onrender.com | Server — 1 mark |
+| **Client (React UI)** | Deploy separately (see below) | Client — 1 mark |
 
-**Important:** `https://smart-campus-1-dm81.onrender.com` is the **React app** (UI).  
-`VITE_API_URL` must be the **backend** URL (Express), not the frontend URL.
+`https://smart-campus-cuco.onrender.com` is the **Express API only** (not the login page).  
+Opening it in the browser shows API status JSON; listings: `/items?type=lost`.
 
-On Render → your **frontend** service → **Environment** → add or update:
+#### Deploy the frontend on Render (required for Client mark)
 
-```env
-VITE_API_URL=https://YOUR-API-SERVICE.onrender.com
-```
+1. [Render Dashboard](https://dashboard.render.com) → **New** → **Static Site**.
+2. Connect the same GitHub repo.
+3. Settings:
+   - **Root Directory:** `client`
+   - **Build Command:** `npm ci && npm run build`
+   - **Publish Directory:** `dist`
+4. **Environment** → add:
 
-Then **Manual Deploy** / redeploy so the build picks up the variable.
+   ```env
+   VITE_API_URL=https://smart-campus-cuco.onrender.com
+   ```
+
+   No trailing slash. **Save** then **Manual Deploy** (rebuild required after any change).
+
+5. Copy the new static site URL (e.g. `https://smart-campus-client.onrender.com`) — use this for the **presentation** (login, listings, admin).
+
+**Important:** `VITE_API_URL` must be the **API** host (`smart-campus-cuco`), not the frontend URL.
+
+Or deploy both services from repo root via **Blueprint** using `render.yaml` (API + static frontend).
 
 ### Verify deployment
 
-1. Open https://smart-campus-1-dm81.onrender.com — home page loads listings.
-2. Register / login — browser network tab should call your API host (not the frontend URL).
-3. API: open `https://YOUR-API-SERVICE.onrender.com/items?type=lost` — should return JSON (not HTML).
+1. **Server:** https://smart-campus-cuco.onrender.com/items?type=lost — JSON array.
+2. **Client:** open your static site URL — home page and login work; Network tab calls `smart-campus-cuco.onrender.com`.
+3. Register / login on the **frontend** URL, not the API URL.
 
 ---
 
