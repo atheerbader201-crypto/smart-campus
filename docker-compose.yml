@@ -1,0 +1,26 @@
+# Smart Campus — API + frontend (Docker Compose)
+# Usage: copy .env.example → .env (repo root), set MONGODB_URI, then:
+#   docker compose up --build
+
+services:
+  api:
+    build: ./server
+    container_name: smart-campus-api
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      MONGODB_URI: ${MONGODB_URI}
+
+  client:
+    build:
+      context: ./client
+      args:
+        # Browser on your PC calls the API at localhost (mapped port 5000)
+        VITE_API_URL: http://localhost:5000
+    container_name: smart-campus-client
+    ports:
+      - "8080:80"
+    depends_on:
+      - api

@@ -1,4 +1,7 @@
-# Smart Campus API — Node + Express
+# Smart Campus API
+#   docker build -t smart-campus-api .
+#   docker compose up --build   (from repo root)
+# Render: rootDir server — see render.yaml
 FROM node:20-alpine
 
 WORKDIR /app

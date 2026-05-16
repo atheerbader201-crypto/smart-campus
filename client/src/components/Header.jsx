@@ -9,7 +9,7 @@ import {
 } from "reactstrap";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import API from "../api/api";
 import logo from "../assets/smart-campus-logo.png";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineNotifications } from "react-icons/md";
@@ -21,8 +21,6 @@ import {
   markNotificationIdRead as persistNotificationRead,
   markAllNotificationIdsRead as persistAllNotificationsRead,
 } from "../notificationsStorage";
-
-const API = "http://localhost:5000";
 
 function mapServerRows(rows, userId, readSet) {
   return rows.map((row) => ({
@@ -61,7 +59,7 @@ const Header = () => {
       return;
     }
     try {
-      const res = await axios.get(`${API}/notifications`);
+      const res = await API.get("/notifications");
       const rows = Array.isArray(res.data) ? res.data : [];
       setServerRows(rows);
       setNotifFetchError(false);

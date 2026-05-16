@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import API from "../api/api";
 import {
   writeStoredUser,
   clearStoredUser,
@@ -17,10 +17,7 @@ export const addUser = createAsyncThunk(
   "user/addUser",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/register",
-        userData
-      );
+      const response = await API.post("/register", userData);
       return response.data;
     } catch (error) {
       return rejectWithValue("Network error");
@@ -32,10 +29,7 @@ export const login = createAsyncThunk(
   "user/login",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/login",
-        userData
-      );
+      const response = await API.post("/login", userData);
       return response.data;
     } catch (error) {
       return rejectWithValue("Network error");
@@ -47,10 +41,7 @@ export const updateProfile = createAsyncThunk(
   "user/updateProfile",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await axios.put(
-        "http://localhost:5000/profile",
-        payload
-      );
+      const response = await API.put("/profile", payload);
       return response.data;
     } catch (error) {
       const msg =
@@ -64,10 +55,10 @@ export const resetPasswordByEmail = createAsyncThunk(
   "user/resetPasswordByEmail",
   async ({ email, newPassword }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/reset-password",
-        { email, newPassword }
-      );
+      const response = await API.post("/reset-password", {
+        email,
+        newPassword,
+      });
       return response.data;
     } catch (error) {
       const msg =

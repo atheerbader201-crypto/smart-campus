@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import axios from "axios";
+import API from "../api/api";
 import moment from "moment";
 import {
   Alert,
@@ -18,8 +18,6 @@ import {
   Table,
 } from "reactstrap";
 import { useSelector } from "react-redux";
-
-const API = "http://localhost:5000";
 
 function trunc(s, max) {
   const t = String(s ?? "");
@@ -59,7 +57,7 @@ const Admin = () => {
     setListLoading(true);
     setError("");
     try {
-      const res = await axios.get(`${API}/notifications`);
+      const res = await API.get("/notifications");
       setList(Array.isArray(res.data) ? res.data : []);
     } catch {
       setList([]);
@@ -74,7 +72,7 @@ const Admin = () => {
     setStatsLoading(true);
     setStatsError("");
     try {
-      const res = await axios.get(`${API}/admin/stats`, {
+      const res = await API.get("/admin/stats", {
         params: { adminUserId: user._id },
       });
       setStats(res.data);
@@ -91,7 +89,7 @@ const Admin = () => {
     setItemsLoading(true);
     setItemsError("");
     try {
-      const res = await axios.get(`${API}/admin/items`, {
+      const res = await API.get("/admin/items", {
         params: {
           adminUserId: user._id,
           type: itemsFilter,
@@ -153,7 +151,7 @@ const Admin = () => {
     setMessage("");
     setError("");
     try {
-      await axios.post(`${API}/admin/notifications`, {
+      await API.post("/admin/notifications", {
         adminUserId: user._id,
         title: title.trim(),
         body: body.trim(),
@@ -178,7 +176,7 @@ const Admin = () => {
     setRowBusyId(id);
     setItemsError("");
     try {
-      await axios.patch(`${API}/admin/items/${id}`, {
+      await API.patch(`/admin/items/${id}`, {
         adminUserId: user._id,
         hidden,
       });
@@ -204,7 +202,7 @@ const Admin = () => {
     setRowBusyId(id);
     setItemsError("");
     try {
-      await axios.delete(`${API}/admin/items/${id}`, {
+      await API.delete(`/admin/items/${id}`, {
         data: { adminUserId: user._id },
       });
       await refreshDashboard();

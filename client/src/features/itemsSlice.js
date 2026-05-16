@@ -1,13 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const API = "http://localhost:5000";
+import API from "../api/api";
 
 export const fetchItems = createAsyncThunk(
   "items/fetchItems",
   async (listingType, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${API}/items`, {
+      const res = await API.get("/items", {
         params: { type: listingType },
       });
       return { listingType, items: res.data };
@@ -23,7 +21,7 @@ export const createItem = createAsyncThunk(
   "items/createItem",
   async (payload, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${API}/items`, payload);
+      const res = await API.post("/items", payload);
       return res.data;
     } catch (e) {
       return rejectWithValue(
@@ -37,7 +35,7 @@ export const updateItem = createAsyncThunk(
   "items/updateItem",
   async ({ id, ...payload }, { rejectWithValue }) => {
     try {
-      const res = await axios.put(`${API}/items/${id}`, payload);
+      const res = await API.put(`/items/${id}`, payload);
       return res.data;
     } catch (e) {
       return rejectWithValue(
@@ -51,7 +49,7 @@ export const removeItem = createAsyncThunk(
   "items/removeItem",
   async ({ id, userId }, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API}/items/${id}`, { data: { userId } });
+      await API.delete(`/items/${id}`, { data: { userId } });
       return id;
     } catch (e) {
       return rejectWithValue(
@@ -66,7 +64,7 @@ export const markListingResolved = createAsyncThunk(
   "items/markListingResolved",
   async ({ id, userId, resolved }, { rejectWithValue }) => {
     try {
-      const res = await axios.patch(`${API}/items/${id}/resolution`, {
+      const res = await API.patch(`/items/${id}/resolution`, {
         userId,
         resolved,
       });

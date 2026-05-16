@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import axios from "axios";
+import API from "../api/api";
 import {
   Alert,
   Badge,
@@ -18,8 +18,6 @@ import {
   UncontrolledCarousel,
 } from "reactstrap";
 import { MdOutlineTravelExplore, MdPhotoCamera, MdPlace } from "react-icons/md";
-
-const API_BASE = "http://localhost:5000";
 
 const HERO_PLACEHOLDER =
   "data:image/svg+xml," +
@@ -65,11 +63,11 @@ const Home = () => {
       setLoading(true);
       try {
         const [lostRes, foundRes] = await Promise.all([
-          axios.get(`${API_BASE}/items`, {
+          API.get("/items", {
             params: { type: "lost" },
             signal,
           }),
-          axios.get(`${API_BASE}/items`, {
+          API.get("/items", {
             params: { type: "found" },
             signal,
           }),
