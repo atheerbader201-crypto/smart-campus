@@ -21,7 +21,4 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: smart-campus-api
-          property: host
+        value: https://smart-campus-cuco.onrender.com
