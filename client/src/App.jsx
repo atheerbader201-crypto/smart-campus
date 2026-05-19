@@ -31,10 +31,13 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
+const AUTH_PATHS = ["/", "/registration", "/forgetPassword"];
+
 function AppShell() {
   const user = useSelector((s) => s.user.user);
   const location = useLocation();
-  const showChrome = isAuthed(user);
+  const isAuthPage = AUTH_PATHS.includes(location.pathname);
+  const showChrome = isAuthed(user) && !isAuthPage;
   const showFooter = showChrome && location.pathname !== "/home";
 
   return (

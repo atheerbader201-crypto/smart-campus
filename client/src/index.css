@@ -777,11 +777,20 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .notification-item {
   display: block;
+  width: 100%;
   padding: 12px 14px;
   text-decoration: none !important;
   color: #333 !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   transition: background-color 0.2s ease;
+}
+
+button.notification-item-dismiss {
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
 }
 
 .notification-item:last-child {

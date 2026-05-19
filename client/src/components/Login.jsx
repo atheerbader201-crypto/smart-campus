@@ -27,12 +27,6 @@ const Login = () => {
     dispatch(clearMessage());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (user && (user._id || user.email)) {
-      navigate(user.isAdmin ? "/admin" : "/home", { replace: true });
-    }
-  }, [user, navigate]);
-
   const handleSubmit = (data) => {
     dispatch(login({ email: data.email, password: data.password }));
   };

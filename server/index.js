@@ -2,11 +2,17 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import bcrypt from "bcrypt";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import UserModel from "./models/user.model.js";
 import ItemModel from "./models/product.model.js";
 import NotificationModel from "./models/notification.model.js";
 import dns from "node:dns/promises";
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const CLIENT_DIST = path.join(__dirname, "public");
 
 const app = express();
 
@@ -597,6 +603,18 @@ app.delete("/admin/items/:id", async (req, res) => {
     res.status(500).json({ message: "Could not delete listing" });
   }
 });
+
+/** Serve Vite build in production (single Render service: API + UI same URL). */
+if (process.env.NODE_ENV === "production" && fs.existsSync(CLIENT_DIST)) {
+  app.use(express.static(CLIENT_DIST, { index: false }));
+  app.get("*", (req, res, next) => {
+    if (req.method !== "GET" && req.method !== "HEAD") return next();
+    res.sendFile(path.join(CLIENT_DIST, "index.html"), (err) => {
+      if (err) next(err);
+    });
+  });
+  console.log("Serving client from", CLIENT_DIST);
+}
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

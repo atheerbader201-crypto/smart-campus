@@ -101,6 +101,12 @@ const Header = () => {
     [mergedNotifications]
   );
 
+  /** Dismiss on click only — no navigation; hide read items. */
+  const displayNotifications = useMemo(
+    () => mergedNotifications.filter((n) => !n.read),
+    [mergedNotifications]
+  );
+
   const markNotificationRead = (id) => {
     if (user?._id) persistNotificationRead(user._id, id);
     setReadBump((x) => x + 1);
@@ -239,36 +245,23 @@ const Header = () => {
                       Could not refresh admin announcements; showing saved items.
                     </p>
                   ) : null}
-                  {mergedNotifications.length === 0 ? (
+                  {displayNotifications.length === 0 ? (
                     <p className="text-muted small mb-0 px-2 py-3 text-center">
-                      {notifFetchError ? (
-                        "Could not load announcements from the server."
-                      ) : (
-                        <>
-                          No notifications yet. When you publish a listing, a
-                          confirmation appears here. Admins can broadcast from{" "}
-                          <Link to="/admin" onClick={() => setIsOpen(false)}>
-                            Admin
-                          </Link>
-                          .
-                        </>
-                      )}
+                      {notifFetchError
+                        ? "Could not load announcements from the server."
+                        : "No new notifications."}
                     </p>
                   ) : (
-                    mergedNotifications.map((n) => (
-                      <Link
+                    displayNotifications.map((n) => (
+                      <button
                         key={n.id}
-                        to={n.to}
-                        className={`notification-item${n.read ? "" : " notification-item-unread"}`}
-                        onClick={() => {
-                          markNotificationRead(n.id);
-                          setNotificationsOpen(false);
-                          setIsOpen(false);
-                        }}
+                        type="button"
+                        className="notification-item notification-item-unread notification-item-dismiss"
+                        onClick={() => markNotificationRead(n.id)}
                       >
                         <span className="notification-item-title">{n.title}</span>
                         <span className="notification-item-body">{n.body}</span>
-                      </Link>
+                      </button>
                     ))
                   )}
                 </div>

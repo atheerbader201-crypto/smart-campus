@@ -1,24 +1,17 @@
-# Render Blueprint — API (Docker) + frontend (static)
+# Render Blueprint — one Web Service (API + frontend on the same URL)
 # https://render.com/docs/blueprint-spec
+#
+# Dashboard: New → Blueprint → connect repo, then set MONGODB_URI when prompted.
+# If you still have a separate Static Site, delete it or point your domain to this service.
+
 services:
   - type: web
-    name: smart-campus-api
+    name: smart-campus
     runtime: docker
-    rootDir: server
     dockerfilePath: ./Dockerfile
     plan: free
     envVars:
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
-        sync: false
-
-  - type: web
-    name: smart-campus-web
-    runtime: static
-    rootDir: client
-    buildCommand: npm ci && npm run build
-    staticPublishPath: dist
-    envVars:
-      - key: VITE_API_URL
         sync: false
