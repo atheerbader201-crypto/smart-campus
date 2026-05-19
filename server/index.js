@@ -12,6 +12,31 @@ import dns from "node:dns/promises";
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+/** Load repo-root `.env` when running locally (Docker Compose injects env vars directly). */
+function loadRootEnv() {
+  const envPath = path.resolve(__dirname, "../.env");
+  if (!fs.existsSync(envPath)) return;
+  const text = fs.readFileSync(envPath, "utf8");
+  for (const line of text.split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const eq = trimmed.indexOf("=");
+    if (eq === -1) continue;
+    const key = trimmed.slice(0, eq).trim();
+    if (!key || process.env[key] !== undefined) continue;
+    let val = trimmed.slice(eq + 1).trim();
+    if (
+      (val.startsWith('"') && val.endsWith('"')) ||
+      (val.startsWith("'") && val.endsWith("'"))
+    ) {
+      val = val.slice(1, -1);
+    }
+    process.env[key] = val;
+  }
+}
+loadRootEnv();
+
 const CLIENT_DIST = path.join(__dirname, "public");
 
 const app = express();

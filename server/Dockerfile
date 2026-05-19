@@ -1,16 +1,17 @@
-# Smart Campus API
-#   docker build -t smart-campus-api .
-#   docker compose up --build   (from repo root)
-FROM node:20-alpine
+# Smart Campus API — Express (port 5000)
+FROM node:20
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm ci --omit=dev
+COPY package*.json ./
+
+RUN npm install
 
 COPY . .
 
-ENV NODE_ENV=production
+ENV NODE_ENV=development
+ENV PORT=5000
+
 EXPOSE 5000
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
